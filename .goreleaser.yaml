@@ -3,14 +3,14 @@
 # define how to build, package, and release Go projects.
 
 version: 2
-project_name: wstunnel-go
+project_name: tunnelvision
 
 git:
   ignore_tags:
     - "pkg/caddy/*"
 
 builds:
-  - main: ./cmd/wstunnel-go
+  - main: ./cmd/tunnelvision
     env:
       - CGO_ENABLED=0
     goos:
@@ -39,22 +39,22 @@ archives:
       - packaging/caddy/Caddyfile
 
 nfpms:
-  - id: wstunnel-go
-    package_name: wstunnel-go
+  - id: tunnelvision
+    package_name: tunnelvision
     vendor: "kad"
-    homepage: "https://github.com/divyansh-rawat/wstunnel-go"
+    homepage: "https://github.com/divyansh-rawat/tunnelvision"
     maintainer: "Alexander D. Kanevskiy <kad@kad.name>"
-    description: "A Go client/server for wstunnel"
+    description: "A Go client/server for tunnelvision"
     license: "MIT"
     formats:
       - deb
       - rpm
       - apk
     contents:
-      - src: ./packaging/systemd/wstunnel-go-client@.service
-        dst: /usr/lib/systemd/system/wstunnel-go-client@.service
-      - src: ./packaging/systemd/wstunnel-go-server@.service
-        dst: /usr/lib/systemd/system/wstunnel-go-server@.service
+      - src: ./packaging/systemd/tunnelvision-client@.service
+        dst: /usr/lib/systemd/system/tunnelvision-client@.service
+      - src: ./packaging/systemd/tunnelvision-server@.service
+        dst: /usr/lib/systemd/system/tunnelvision-server@.service
 
 checksum:
   name_template: 'checksums.txt'

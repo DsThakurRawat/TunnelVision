@@ -1,4 +1,4 @@
-module github.com/divyansh-rawat/wstunnel-go
+module github.com/divyansh-rawat/tunnelvision
 
 go 1.25.0
 

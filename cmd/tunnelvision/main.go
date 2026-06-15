@@ -10,9 +10,9 @@ import (
 	"github.com/urfave/cli/v2"
 	"gopkg.in/yaml.v3"
 
-	"github.com/divyansh-rawat/wstunnel-go/internal/rlimit"
-	"github.com/divyansh-rawat/wstunnel-go/pkg/client"
-	"github.com/divyansh-rawat/wstunnel-go/pkg/server"
+	"github.com/divyansh-rawat/tunnelvision/internal/rlimit"
+	"github.com/divyansh-rawat/tunnelvision/pkg/client"
+	"github.com/divyansh-rawat/tunnelvision/pkg/server"
 )
 
 type FullConfig struct {
@@ -195,14 +195,14 @@ func applyServerFlagOverrides(c *cli.Context, config *server.Config, listenAddr 
 func main() {
 	rlimit.RaiseFdLimit()
 	app := &cli.App{
-		Name:                   "wstunnel-go",
-		Usage:                  "A Go client/server for wstunnel",
+		Name:                   "tunnelvision",
+		Usage:                  "A Go client/server for tunnelvision",
 		UseShortOptionHandling: true,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:    "config",
 				Usage:   "Path to config file (YAML)",
-				EnvVars: []string{"WSTUNNEL_CONFIG"},
+				EnvVars: []string{"TUNNELVISION_CONFIG"},
 			},
 			&cli.StringFlag{
 				Name:    "no-color",
@@ -218,7 +218,7 @@ func main() {
 				Name:    "log-lvl",
 				Value:   "INFO",
 				Usage:   "Log verbosity (TRACE, DEBUG, INFO, WARN, ERROR, OFF)",
-				EnvVars: []string{"WSTUNNEL_LOG_LVL", "RUST_LOG"},
+				EnvVars: []string{"TUNNELVISION_LOG_LVL", "RUST_LOG"},
 			},
 		},
 		Before: func(c *cli.Context) error {
@@ -228,7 +228,7 @@ func main() {
 		Commands: []*cli.Command{
 			{
 				Name:  "client",
-				Usage: "Run wstunnel client",
+				Usage: "Run tunnelvision client",
 				Flags: []cli.Flag{
 					&cli.StringSliceFlag{
 						Name:    "local-to-remote",
@@ -287,18 +287,18 @@ func main() {
 					&cli.StringFlag{
 						Name:    "http-proxy-login",
 						Usage:   "Login for http proxy",
-						EnvVars: []string{"WSTUNNEL_HTTP_PROXY_LOGIN"},
+						EnvVars: []string{"TUNNELVISION_HTTP_PROXY_LOGIN"},
 					},
 					&cli.StringFlag{
 						Name:    "http-proxy-password",
 						Usage:   "Password for http proxy",
-						EnvVars: []string{"WSTUNNEL_HTTP_PROXY_PASSWORD"},
+						EnvVars: []string{"TUNNELVISION_HTTP_PROXY_PASSWORD"},
 					},
 					&cli.StringFlag{
 						Name:    "mode",
 						Value:   "legacy",
 						Usage:   "WebSocket protocol mode (legacy, ws)",
-						EnvVars: []string{"WSTUNNEL_MODE"},
+						EnvVars: []string{"TUNNELVISION_MODE"},
 					},
 					&cli.StringFlag{
 						Name:  "jwt-secret",
@@ -309,7 +309,7 @@ func main() {
 						Aliases: []string{"prefix", "P"},
 						Value:   "v1",
 						Usage:   "HTTP upgrade path prefix",
-						EnvVars: []string{"WSTUNNEL_HTTP_UPGRADE_PATH_PREFIX"},
+						EnvVars: []string{"TUNNELVISION_HTTP_UPGRADE_PATH_PREFIX"},
 					},
 					&cli.StringFlag{
 						Name:  "http-upgrade-credentials",
@@ -349,20 +349,20 @@ func main() {
 					&cli.BoolFlag{
 						Name:    "dns-resolver-prefer-ipv4",
 						Usage:   "Prioritize IPv4 for DNS lookup",
-						EnvVars: []string{"WSTUNNEL_DNS_PREFER_IPV4"},
+						EnvVars: []string{"TUNNELVISION_DNS_PREFER_IPV4"},
 					},
 				},
 				Action: runClient,
 			},
 			{
 				Name:  "server",
-				Usage: "Run wstunnel server",
+				Usage: "Run tunnelvision server",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:    "mode",
 						Value:   "legacy",
 						Usage:   "WebSocket protocol mode (legacy, ws)",
-						EnvVars: []string{"WSTUNNEL_MODE"},
+						EnvVars: []string{"TUNNELVISION_MODE"},
 					},
 					&cli.StringFlag{
 						Name:  "jwt-secret",
@@ -377,7 +377,7 @@ func main() {
 						Aliases: []string{"prefix", "P"},
 						Value:   "v1",
 						Usage:   "HTTP upgrade path prefix",
-						EnvVars: []string{"WSTUNNEL_HTTP_UPGRADE_PATH_PREFIX"},
+						EnvVars: []string{"TUNNELVISION_HTTP_UPGRADE_PATH_PREFIX"},
 					},
 					&cli.UintFlag{
 						Name:  "socket-so-mark",
@@ -400,7 +400,7 @@ func main() {
 					&cli.BoolFlag{
 						Name:    "dns-resolver-prefer-ipv4",
 						Usage:   "Prioritize IPv4 for DNS lookup",
-						EnvVars: []string{"WSTUNNEL_DNS_PREFER_IPV4"},
+						EnvVars: []string{"TUNNELVISION_DNS_PREFER_IPV4"},
 					},
 					&cli.StringSliceFlag{
 						Name:  "restrict-to",
@@ -410,7 +410,7 @@ func main() {
 						Name:    "restrict-http-upgrade-path-prefix",
 						Aliases: []string{"r"},
 						Usage:   "Restrict tunnels to specific path prefixes",
-						EnvVars: []string{"WSTUNNEL_RESTRICT_HTTP_UPGRADE_PATH_PREFIX"},
+						EnvVars: []string{"TUNNELVISION_RESTRICT_HTTP_UPGRADE_PATH_PREFIX"},
 					},
 					&cli.StringFlag{
 						Name:  "restrict-config",
@@ -437,12 +437,12 @@ func main() {
 					&cli.StringFlag{
 						Name:    "http-proxy-login",
 						Usage:   "Login for http proxy",
-						EnvVars: []string{"WSTUNNEL_HTTP_PROXY_LOGIN"},
+						EnvVars: []string{"TUNNELVISION_HTTP_PROXY_LOGIN"},
 					},
 					&cli.StringFlag{
 						Name:    "http-proxy-password",
 						Usage:   "Password for http proxy",
-						EnvVars: []string{"WSTUNNEL_HTTP_PROXY_PASSWORD"},
+						EnvVars: []string{"TUNNELVISION_HTTP_PROXY_PASSWORD"},
 					},
 					&cli.DurationFlag{
 						Name:    "remote-to-local-server-idle-timeout",

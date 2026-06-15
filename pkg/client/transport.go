@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/divyansh-rawat/wstunnel-go/internal/socket"
+	"github.com/divyansh-rawat/tunnelvision/internal/socket"
 )
 
 func (c *Client) tlsClientConfig(serverName string) (*tls.Config, error) {

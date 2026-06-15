@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/divyansh-rawat/wstunnel-go/pkg/protocol"
+	"github.com/divyansh-rawat/tunnelvision/pkg/protocol"
 )
 
 func TestParseTunnelArg(t *testing.T) {
