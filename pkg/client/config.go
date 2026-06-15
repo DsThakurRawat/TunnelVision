@@ -1,0 +1,209 @@
+package client
+
+import (
+	"fmt"
+	"net"
+	"net/url"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/divyansh-rawat/wstunnel-go/pkg/protocol"
+)
+
+func parseDurationSec(s string) (*protocol.Duration, error) {
+	if s == "" {
+		return nil, nil
+	}
+	d, err := time.ParseDuration(s + "s")
+	if err != nil {
+		// Try parsing as raw int
+		secs, err := strconv.ParseUint(s, 10, 64)
+		if err != nil {
+			return nil, err
+		}
+		return &protocol.Duration{Secs: secs}, nil
+	}
+	return &protocol.Duration{Secs: uint64(d.Seconds()), Nanos: uint32(d.Nanoseconds() % 1e9)}, nil
+}
+
+func ParseTunnelArg(arg string, isReverse bool) (*protocol.LocalToRemote, error) {
+	parts := strings.SplitN(arg, "://", 2)
+	if len(parts) != 2 {
+		return nil, fmt.Errorf("invalid tunnel format, missing ://")
+	}
+	proto := parts[0]
+	info := parts[1]
+
+	// Split by '?' to get options
+	options := make(map[string]string)
+	if idx := strings.Index(info, "?"); idx != -1 {
+		query := info[idx+1:]
+		info = info[:idx]
+		values, _ := url.ParseQuery(query)
+		for k, v := range values {
+			if len(v) > 0 {
+				options[k] = v[0]
+			}
+		}
+	}
+
+	getTimeout := func() *protocol.Duration {
+		if val, ok := options["timeout_sec"]; ok {
+			d, _ := parseDurationSec(val)
+			return d
+		}
+		return &protocol.Duration{Secs: 30}
+	}
+
+	getCredentials := func() *protocol.Credentials {
+		login := options["login"]
+		pass := options["password"]
+		if login != "" && pass != "" {
+			return &protocol.Credentials{Username: login, Password: pass}
+		}
+		return nil
+	}
+
+	getProxyProtocol := func() bool {
+		_, ok := options["proxy_protocol"]
+		return ok
+	}
+
+	// For stdio, it is protocol://host:port
+	if proto == "stdio" {
+		host, portStr, err := net.SplitHostPort(info)
+		if err != nil {
+			return nil, fmt.Errorf("invalid stdio target: %w", err)
+		}
+		port, _ := strconv.ParseUint(portStr, 10, 16)
+		return &protocol.LocalToRemote{
+			Protocol: protocol.LocalProtocol{
+				Stdio: &protocol.StdioProtocol{ProxyProtocol: getProxyProtocol()},
+			},
+			Remote: host,
+			Port:   uint16(port),
+		}, nil
+	}
+
+	if proto == "unix" {
+		parts := strings.SplitN(info, ":", 2)
+		localPath := parts[0]
+		remotePath := ""
+		if len(parts) > 1 {
+			remotePath = parts[1]
+		}
+
+		ltr := &protocol.LocalToRemote{
+			Local: localPath,
+		}
+
+		if isReverse {
+			ltr.Protocol = protocol.LocalProtocol{ReverseUnix: &protocol.ReverseUnixProtocol{Path: localPath}}
+			// For reverse unix, format is usually unix://local_path:remote_path
+			// but wstunnel (rust) might have different ideas.
+			// In our case, we want the server to listen on remotePath and forward to localPath.
+			if remotePath != "" {
+				ltr.Remote = remotePath // This will be used as the listen path on the server
+			}
+		} else {
+			ltr.Protocol = protocol.LocalProtocol{Unix: &protocol.UnixProtocol{Path: remotePath, ProxyProtocol: getProxyProtocol()}}
+			ltr.Remote = remotePath
+		}
+		return ltr, nil
+	}
+
+	// Format is usually [bind:]port[:host:port]
+	localBind := "127.0.0.1"
+	localPort := ""
+	remoteHost := "0.0.0.0"
+	var remotePort uint16
+
+	// Robust parsing of [bind:]port[:host:port]
+	// If it contains brackets, it has an IPv6 bind or host
+	// For simplicity and alignment with Rust, let's look for the first protocol separator '://' (already handled)
+	// then split the rest by ':' but being careful about IPv6 brackets.
+
+	var partsInfo []string
+	curr := ""
+	inBrackets := false
+	for _, r := range info {
+		switch r {
+		case '[':
+			inBrackets = true
+		case ']':
+			inBrackets = false
+		}
+
+		if r == ':' && !inBrackets {
+			partsInfo = append(partsInfo, curr)
+			curr = ""
+		} else {
+			curr += string(r)
+		}
+	}
+	partsInfo = append(partsInfo, curr)
+
+	switch len(partsInfo) {
+	case 1: // port
+		localPort = partsInfo[0]
+	case 2: // bind:port OR port:host (ambiguous, assume bind:port for dynamic, port:host if we had a way to know)
+		// wstunnel usually treats it as bind:port if it's dynamic
+		localBind = partsInfo[0]
+		localPort = partsInfo[1]
+	case 3: // port:host:port
+		localPort = partsInfo[0]
+		remoteHost = partsInfo[1]
+		rp, _ := strconv.ParseUint(partsInfo[2], 10, 16)
+		remotePort = uint16(rp)
+	case 4: // bind:port:host:port
+		localBind = partsInfo[0]
+		localPort = partsInfo[1]
+		remoteHost = partsInfo[2]
+		rp, _ := strconv.ParseUint(partsInfo[3], 10, 16)
+		remotePort = uint16(rp)
+	default:
+		return nil, fmt.Errorf("invalid tunnel format: %s", info)
+	}
+
+	ltr := &protocol.LocalToRemote{
+		Local:  net.JoinHostPort(strings.Trim(localBind, "[]"), localPort),
+		Remote: strings.Trim(remoteHost, "[]"),
+		Port:   remotePort,
+	}
+
+	switch proto {
+	case "tcp":
+		if isReverse {
+			ltr.Protocol = protocol.LocalProtocol{ReverseTcp: &struct{}{}}
+		} else {
+			ltr.Protocol = protocol.LocalProtocol{Tcp: &protocol.TcpProtocol{ProxyProtocol: getProxyProtocol()}}
+		}
+	case "udp":
+		if isReverse {
+			return nil, fmt.Errorf("reverse UDP tunnels are not implemented")
+		} else {
+			ltr.Protocol = protocol.LocalProtocol{Udp: &protocol.UdpProtocol{Timeout: getTimeout()}}
+		}
+	case "socks5":
+		if isReverse {
+			return nil, fmt.Errorf("reverse SOCKS5 tunnels are not implemented")
+		} else {
+			ltr.Protocol = protocol.LocalProtocol{Socks5: &protocol.Socks5Protocol{Timeout: getTimeout(), Credentials: getCredentials()}}
+		}
+	case "http":
+		if isReverse {
+			return nil, fmt.Errorf("reverse HTTP proxy tunnels are not implemented")
+		} else {
+			ltr.Protocol = protocol.LocalProtocol{HttpProxy: &protocol.HttpProxyProtocol{Timeout: getTimeout(), Credentials: getCredentials(), ProxyProtocol: getProxyProtocol()}}
+		}
+	case "tproxy+tcp":
+		ltr.Protocol = protocol.LocalProtocol{TProxyTcp: &struct{}{}}
+	case "tproxy+udp":
+		ltr.Protocol = protocol.LocalProtocol{TProxyUdp: &protocol.TProxyUdpProtocol{Timeout: getTimeout()}}
+	default:
+		return nil, fmt.Errorf("unsupported protocol: %s", proto)
+	}
+
+	return ltr, nil
+}
