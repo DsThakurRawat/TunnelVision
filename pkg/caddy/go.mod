@@ -1,12 +1,12 @@
-module github.com/kad/tunnelvision/pkg/caddy
+module github.com/DsThakurRawat/TunnelVision/pkg/caddy
 
 go 1.25.7
 
-replace github.com/kad/tunnelvision => ../../
+replace github.com/DsThakurRawat/TunnelVision => ../../
 
 require (
 	github.com/caddyserver/caddy/v2 v2.11.4
-	github.com/kad/tunnelvision v0.0.1
+	github.com/DsThakurRawat/TunnelVision v0.0.1
 	go.uber.org/zap v1.28.0
 )
 

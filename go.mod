@@ -1,4 +1,4 @@
-module github.com/kad/tunnelvision
+module github.com/DsThakurRawat/TunnelVision
 
 go 1.25.0
 

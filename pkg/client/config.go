@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kad/tunnelvision/pkg/protocol"
+	"github.com/DsThakurRawat/TunnelVision/pkg/protocol"
 )
 
 func parseDurationSec(s string) (*protocol.Duration, error) {

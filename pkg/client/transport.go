@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/kad/tunnelvision/internal/socket"
+	"github.com/DsThakurRawat/TunnelVision/internal/socket"
 )
 
 func (c *Client) tlsClientConfig(serverName string) (*tls.Config, error) {

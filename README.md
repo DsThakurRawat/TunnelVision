@@ -51,7 +51,7 @@ A feature-complete Go implementation of [tunnelvision](https://github.com/erebe/
 ### Build from Source
 
 ```bash
-git clone https://github.com/kad/tunnelvision.git
+git clone https://github.com/DsThakurRawat/TunnelVision.git
 cd tunnelvision
 make build
 # Binary will be available in ./bin/tunnelvision
@@ -65,7 +65,7 @@ go build -o tunnelvision ./cmd/tunnelvision
 
 ### Download Pre-built Binaries and Packages
 
-Binaries for various platforms (Linux, macOS, Windows) and distribution packages (`.deb`, `.rpm`, `.apk`) are available on the [Releases](https://github.com/kad/tunnelvision/releases) page.
+Binaries for various platforms (Linux, macOS, Windows) and distribution packages (`.deb`, `.rpm`, `.apk`) are available on the [Releases](https://github.com/DsThakurRawat/TunnelVision/releases) page.
 
 ### Installation via Package Manager (Linux)
 
@@ -109,7 +109,7 @@ Use the provided PowerShell scripts in the `packaging/windows` directory to regi
 
 1.  Build Caddy with `tunnelvision` module:
     ```bash
-    xcaddy build --with github.com/kad/tunnelvision/pkg/caddy
+    xcaddy build --with github.com/DsThakurRawat/TunnelVision/pkg/caddy
     ```
 
 2.  Configure in `Caddyfile`:
@@ -228,8 +228,8 @@ server:
 
 ```go
 import (
-    "github.com/kad/tunnelvision/pkg/client"
-    "github.com/kad/tunnelvision/pkg/protocol"
+    "github.com/DsThakurRawat/TunnelVision/pkg/client"
+    "github.com/DsThakurRawat/TunnelVision/pkg/protocol"
 )
 
 func main() {

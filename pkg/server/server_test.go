@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/DsThakurRawat/TunnelVision/pkg/protocol"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/kad/tunnelvision/pkg/protocol"
 	"gopkg.in/yaml.v3"
 )
 

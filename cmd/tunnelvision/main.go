@@ -10,9 +10,9 @@ import (
 	"github.com/urfave/cli/v2"
 	"gopkg.in/yaml.v3"
 
-	"github.com/kad/tunnelvision/internal/rlimit"
-	"github.com/kad/tunnelvision/pkg/client"
-	"github.com/kad/tunnelvision/pkg/server"
+	"github.com/DsThakurRawat/TunnelVision/internal/rlimit"
+	"github.com/DsThakurRawat/TunnelVision/pkg/client"
+	"github.com/DsThakurRawat/TunnelVision/pkg/server"
 )
 
 type FullConfig struct {

@@ -60,7 +60,7 @@ verify: ## Run go mod verify
 .PHONY: build-caddy
 build-caddy: ## Build Caddy with tunnelvision module
 	@echo "Building Caddy with tunnelvision module..."
-	cd pkg/caddy && xcaddy build --with github.com/kad/tunnelvision/pkg/caddy=$(CURDIR)/pkg/caddy --with github.com/kad/tunnelvision=$(CURDIR)
+	cd pkg/caddy && xcaddy build --with github.com/DsThakurRawat/TunnelVision/pkg/caddy=$(CURDIR)/pkg/caddy --with github.com/DsThakurRawat/TunnelVision=$(CURDIR)
 
 .PHONY: check-caddy
 check-caddy: build-caddy ## Check if Caddy module is correctly registered

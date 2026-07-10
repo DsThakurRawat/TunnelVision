@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kad/tunnelvision/pkg/client"
-	"github.com/kad/tunnelvision/pkg/server"
+	"github.com/DsThakurRawat/TunnelVision/pkg/client"
+	"github.com/DsThakurRawat/TunnelVision/pkg/server"
 	"github.com/urfave/cli/v2"
 )
 

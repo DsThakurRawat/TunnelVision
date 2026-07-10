@@ -17,8 +17,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/DsThakurRawat/TunnelVision/pkg/protocol"
 	"github.com/gorilla/websocket"
-	"github.com/kad/tunnelvision/pkg/protocol"
 )
 
 func TestAuthenticateHTTPProxy(t *testing.T) {

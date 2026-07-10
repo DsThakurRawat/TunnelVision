@@ -7,7 +7,7 @@ import (
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/kad/tunnelvision/pkg/server"
+	"github.com/DsThakurRawat/TunnelVision/pkg/server"
 	"go.uber.org/zap"
 )
 

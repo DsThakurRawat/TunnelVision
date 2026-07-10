@@ -1,6 +1,6 @@
 [Unit]
 Description=tunnelvision server - %I
-Documentation=https://github.com/kad/tunnelvision
+Documentation=https://github.com/DsThakurRawat/TunnelVision
 After=network.target
 
 [Service]
