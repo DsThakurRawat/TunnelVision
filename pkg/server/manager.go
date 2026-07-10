@@ -11,11 +11,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/divyansh-rawat/tunnelvision/internal/socket"
-	"github.com/divyansh-rawat/tunnelvision/pkg/protocol"
-	"github.com/divyansh-rawat/tunnelvision/pkg/tunnel"
-	"github.com/divyansh-rawat/tunnelvision/pkg/wst"
 	"github.com/gorilla/websocket"
+	"github.com/kad/wstunnel-go/internal/socket"
+	"github.com/kad/wstunnel-go/pkg/protocol"
+	"github.com/kad/wstunnel-go/pkg/tunnel"
+	"github.com/kad/wstunnel-go/pkg/wst"
 )
 
 type ReverseTunnelManager struct {

@@ -7,17 +7,17 @@ import (
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
-	"github.com/divyansh-rawat/tunnelvision/pkg/server"
+	"github.com/kad/wstunnel-go/pkg/server"
 	"go.uber.org/zap"
 )
 
 func init() {
-	caddy.RegisterModule(Tunnelvision{})
+	caddy.RegisterModule(Wstunnel{})
 }
 
-// Tunnelvision is a Caddy module that allows serving tunnelvisions.
-type Tunnelvision struct {
-	// The configuration for the tunnelvision server.
+// Wstunnel is a Caddy module that allows serving wstunnels.
+type Wstunnel struct {
+	// The configuration for the wstunnel server.
 	Config server.Config `json:"config,omitempty"`
 
 	// Inline restrictions.
@@ -28,20 +28,20 @@ type Tunnelvision struct {
 }
 
 // CaddyModule returns the Caddy module information.
-func (Tunnelvision) CaddyModule() caddy.ModuleInfo {
+func (Wstunnel) CaddyModule() caddy.ModuleInfo {
 	return caddy.ModuleInfo{
-		ID:  "http.handlers.tunnelvision",
-		New: func() caddy.Module { return new(Tunnelvision) },
+		ID:  "http.handlers.wstunnel",
+		New: func() caddy.Module { return new(Wstunnel) },
 	}
 }
 
 // Provision sets up the module.
-func (w *Tunnelvision) Provision(ctx caddy.Context) error {
+func (w *Wstunnel) Provision(ctx caddy.Context) error {
 	w.log = ctx.Logger()
 
-	// If no mode is specified, default to legacy for compatibility
+	// If no mode is specified, default to rust for compatibility
 	if w.Config.WebsocketProtocol == "" {
-		w.Config.WebsocketProtocol = "legacy"
+		w.Config.WebsocketProtocol = "rust"
 	}
 
 	w.server = server.NewServer(w.Config)
@@ -59,10 +59,10 @@ func (w *Tunnelvision) Provision(ctx caddy.Context) error {
 }
 
 // ServeHTTP implements caddyhttp.Handler.
-func (w *Tunnelvision) ServeHTTP(rw http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
-	// tunnelvision server handles path prefix checking if configured.
+func (w *Wstunnel) ServeHTTP(rw http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
+	// wstunnel-go server handles path prefix checking if configured.
 
-	// We want to detect if this is potentially a tunnelvision request.
+	// We want to detect if this is potentially a wstunnel request.
 	// It's either a WebSocket upgrade or an HTTP/2 POST (for h2 transport).
 
 	isWebsocket := strings.ToLower(r.Header.Get("Upgrade")) == "websocket"
@@ -86,8 +86,8 @@ func (w *Tunnelvision) ServeHTTP(rw http.ResponseWriter, r *http.Request, next c
 
 // UnmarshalCaddyfile sets up the handler from Caddyfile tokens.
 //
-//	tunnelvision {
-//	    mode ws|legacy
+//	wstunnel {
+//	    mode ws|rust
 //	    prefix /v1
 //	    restrict_config /path/to/rules.yaml
 //	    ping_interval 30s
@@ -95,7 +95,7 @@ func (w *Tunnelvision) ServeHTTP(rw http.ResponseWriter, r *http.Request, next c
 //	    mask_frame
 //	    restrict_to host:port ...
 //	}
-func (w *Tunnelvision) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
+func (w *Wstunnel) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	for d.Next() {
 		for d.NextBlock(0) {
 			switch d.Val() {
@@ -146,7 +146,7 @@ func (w *Tunnelvision) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 
 // Interface guards
 var (
-	_ caddy.Provisioner           = (*Tunnelvision)(nil)
-	_ caddyhttp.MiddlewareHandler = (*Tunnelvision)(nil)
-	_ caddyfile.Unmarshaler       = (*Tunnelvision)(nil)
+	_ caddy.Provisioner           = (*Wstunnel)(nil)
+	_ caddyhttp.MiddlewareHandler = (*Wstunnel)(nil)
+	_ caddyfile.Unmarshaler       = (*Wstunnel)(nil)
 )
