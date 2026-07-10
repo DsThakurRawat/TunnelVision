@@ -5,8 +5,8 @@ import (
 	"net"
 	"sync"
 
-	"github.com/divyansh-rawat/tunnelvision/pkg/wst"
 	"github.com/gorilla/websocket"
+	"github.com/kad/tunnelvision/pkg/wst"
 )
 
 // Pipe pipes data between a TCP connection and a WebSocket connection.

@@ -27,7 +27,7 @@ The `Makefile` provides convenient targets for common development tasks:
 -   `all`: (Default) Builds the application. Equivalent to `make build`.
 -   `build`: Compiles the `tunnelvision` binary and places it in the `./bin` directory.
 -   `test`: Runs all unit and integration tests with verbose output and race detection (`go test -v -race ./...`).
--   `test-interop`: Runs end-to-end interoperability tests between `tunnelvision` and the original Legacy `tunnelvision` implementation.
+-   `test-interop`: Runs end-to-end interoperability tests between `tunnelvision` and the original Rust `tunnelvision` implementation.
 -   `lint`: Executes `golangci-lint` to analyze the codebase for potential issues.
 -   `vet`: Runs `go vet` for static analysis.
 -   `fmt`: Formats all Go source files using `go fmt`.
@@ -52,10 +52,10 @@ The project uses `golangci-lint` for static code analysis.
 -   **CI Integration:** These tests are automatically executed in the CI workflow.
 
 ### Interoperability Testing
--   **Purpose:** To validate compatibility with the original Legacy `tunnelvision` implementation.
+-   **Purpose:** To validate compatibility with the original Rust `tunnelvision` implementation.
 -   **Execution:** Run `make test-interop`.
--   **Requirements:** Requires the Legacy `tunnelvision` binary to be available on the system `PATH` under the name `tunnelvision` (tests will be skipped if it is not found).
--   **Scope:** Tests various client/server combinations (Go-Go, Go-Legacy, Legacy-Go) across both WebSocket and HTTP/2 transports.
+-   **Requirements:** Requires the Rust `tunnelvision` binary to be available on the system `PATH` under the name `tunnelvision` (tests will be skipped if it is not found).
+-   **Scope:** Tests various client/server combinations (Go-Go, Go-Rust, Rust-Go) across both WebSocket and HTTP/2 transports.
 
 ## 7. GitHub Workflows
 
@@ -73,8 +73,8 @@ The project utilizes GitHub Actions for Continuous Integration and Continuous De
 
 The project supports multiple transport protocols for tunneling:
 
--  **WebSocket**: (Default) WebSocket-based transport with specific tweaks for compatibility with original Legacy implementation. Uses `Sec-WebSocket-Protocol` header for JWT authentication.
--  **RFC 6455 WebSocket**: Strict RFC-compliant mode enabled via `--mode ws`. Recommended for use with standard Go WebSocket clients but may not be compatible with the original Legacy implementation.
+-  **WebSocket**: (Default) WebSocket-based transport with specific tweaks for compatibility with original Rust implementation. Uses `Sec-WebSocket-Protocol` header for JWT authentication.
+-  **RFC 6455 WebSocket**: Strict RFC-compliant mode enabled via `--mode ws`. Recommended for use with standard Go WebSocket clients but may not be compatible with the original Rust implementation.
 -  **HTTP/2**: Provides full-duplex streaming over HTTP/2 POST requests. Uses `Cookie` header for JWT authentication.
 
 ### Client Configuration

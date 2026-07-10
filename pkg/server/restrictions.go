@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/divyansh-rawat/tunnelvision/pkg/protocol"
+	"github.com/kad/tunnelvision/pkg/protocol"
 	"gopkg.in/yaml.v3"
 )
 

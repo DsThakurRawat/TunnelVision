@@ -1,6 +1,6 @@
 [Unit]
 Description=tunnelvision client - %I
-Documentation=https://github.com/divyansh-rawat/tunnelvision
+Documentation=https://github.com/kad/tunnelvision
 After=network.target
 
 [Service]
