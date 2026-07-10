@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/gorilla/websocket"
-	"github.com/kad/wstunnel-go/pkg/wst"
+	"github.com/kad/tunnelvision/pkg/wst"
 )
 
 // Pipe pipes data between a TCP connection and a WebSocket connection.

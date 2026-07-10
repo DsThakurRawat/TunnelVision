@@ -12,10 +12,10 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/kad/wstunnel-go/internal/socket"
-	"github.com/kad/wstunnel-go/pkg/protocol"
-	"github.com/kad/wstunnel-go/pkg/tunnel"
-	"github.com/kad/wstunnel-go/pkg/wst"
+	"github.com/kad/tunnelvision/internal/socket"
+	"github.com/kad/tunnelvision/pkg/protocol"
+	"github.com/kad/tunnelvision/pkg/tunnel"
+	"github.com/kad/tunnelvision/pkg/wst"
 )
 
 type ReverseTunnelManager struct {

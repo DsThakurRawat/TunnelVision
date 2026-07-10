@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/kad/wstunnel-go/pkg/protocol"
+	"github.com/kad/tunnelvision/pkg/protocol"
 	"gopkg.in/yaml.v3"
 )
 

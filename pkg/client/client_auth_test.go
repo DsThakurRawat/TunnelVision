@@ -18,7 +18,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/kad/wstunnel-go/pkg/protocol"
+	"github.com/kad/tunnelvision/pkg/protocol"
 )
 
 func TestAuthenticateHTTPProxy(t *testing.T) {

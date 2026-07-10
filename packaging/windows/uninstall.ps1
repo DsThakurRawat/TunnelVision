@@ -1,5 +1,5 @@
 # uninstall.ps1
-$TaskName = "wstunnel-go-client"
+$TaskName = "tunnelvision-client"
 if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) {
     Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false
     Write-Host "$TaskName task unregistered successfully."

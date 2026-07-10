@@ -5,7 +5,7 @@ param (
     [string]$Action
 )
 
-$TaskName = "wstunnel-go-client"
+$TaskName = "tunnelvision-client"
 
 switch ($Action) {
     "start" {

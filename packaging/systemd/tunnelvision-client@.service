@@ -1,15 +1,15 @@
 [Unit]
-Description=wstunnel-go client - %I
-Documentation=https://github.com/kad/wstunnel-go
+Description=tunnelvision client - %I
+Documentation=https://github.com/kad/tunnelvision
 After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/wstunnel-go client --config /etc/wstunnel-go/%i.yaml
+ExecStart=/usr/bin/tunnelvision client --config /etc/tunnelvision/%i.yaml
 Restart=always
 RestartSec=5
 # Security Hardening
-ReadOnlyPaths=/etc/wstunnel-go
+ReadOnlyPaths=/etc/tunnelvision
 ProtectSystem=full
 ProtectHome=true
 PrivateTmp=true
