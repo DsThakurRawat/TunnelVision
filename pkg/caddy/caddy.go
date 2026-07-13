@@ -12,11 +12,11 @@ import (
 )
 
 func init() {
-	caddy.RegisterModule(Tunnelvision{})
+	caddy.RegisterModule(TunnelVision{})
 }
 
-// Tunnelvision is a Caddy module that allows serving tunnelvisions.
-type Tunnelvision struct {
+// TunnelVision is a Caddy module that allows serving tunnelvision endpoints.
+type TunnelVision struct {
 	// The configuration for the tunnelvision server.
 	Config server.Config `json:"config,omitempty"`
 
@@ -28,15 +28,15 @@ type Tunnelvision struct {
 }
 
 // CaddyModule returns the Caddy module information.
-func (Tunnelvision) CaddyModule() caddy.ModuleInfo {
+func (TunnelVision) CaddyModule() caddy.ModuleInfo {
 	return caddy.ModuleInfo{
 		ID:  "http.handlers.tunnelvision",
-		New: func() caddy.Module { return new(Tunnelvision) },
+		New: func() caddy.Module { return new(TunnelVision) },
 	}
 }
 
 // Provision sets up the module.
-func (w *Tunnelvision) Provision(ctx caddy.Context) error {
+func (w *TunnelVision) Provision(ctx caddy.Context) error {
 	w.log = ctx.Logger()
 
 	// If no mode is specified, default to rust for compatibility
@@ -59,7 +59,7 @@ func (w *Tunnelvision) Provision(ctx caddy.Context) error {
 }
 
 // ServeHTTP implements caddyhttp.Handler.
-func (w *Tunnelvision) ServeHTTP(rw http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
+func (w *TunnelVision) ServeHTTP(rw http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
 	// tunnelvision server handles path prefix checking if configured.
 
 	// We want to detect if this is potentially a tunnelvision request.
@@ -87,7 +87,7 @@ func (w *Tunnelvision) ServeHTTP(rw http.ResponseWriter, r *http.Request, next c
 // UnmarshalCaddyfile sets up the handler from Caddyfile tokens.
 //
 //	tunnelvision {
-//	    mode ws|rust
+//	    mode ws
 //	    prefix /v1
 //	    restrict_config /path/to/rules.yaml
 //	    ping_interval 30s
@@ -95,7 +95,7 @@ func (w *Tunnelvision) ServeHTTP(rw http.ResponseWriter, r *http.Request, next c
 //	    mask_frame
 //	    restrict_to host:port ...
 //	}
-func (w *Tunnelvision) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
+func (w *TunnelVision) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	for d.Next() {
 		for d.NextBlock(0) {
 			switch d.Val() {
@@ -146,7 +146,7 @@ func (w *Tunnelvision) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 
 // Interface guards
 var (
-	_ caddy.Provisioner           = (*Tunnelvision)(nil)
-	_ caddyhttp.MiddlewareHandler = (*Tunnelvision)(nil)
-	_ caddyfile.Unmarshaler       = (*Tunnelvision)(nil)
+	_ caddy.Provisioner           = (*TunnelVision)(nil)
+	_ caddyhttp.MiddlewareHandler = (*TunnelVision)(nil)
+	_ caddyfile.Unmarshaler       = (*TunnelVision)(nil)
 )

@@ -36,7 +36,7 @@ func generateSignedCerts(certPath, keyPath string, caCertPath, caKeyPath string)
 	template := x509.Certificate{
 		SerialNumber: serialNumber,
 		Subject: pkix.Name{
-			Organization: []string{"Tunnelvision Test"},
+			Organization: []string{"TunnelVision Test"},
 		},
 		NotBefore: notBefore,
 		NotAfter:  notAfter,
@@ -133,7 +133,7 @@ func generateCA(certPath, keyPath string) error {
 	template := x509.Certificate{
 		SerialNumber: serialNumber,
 		Subject: pkix.Name{
-			Organization: []string{"Tunnelvision Test CA"},
+			Organization: []string{"TunnelVision Test CA"},
 		},
 		NotBefore:             notBefore,
 		NotAfter:              notAfter,

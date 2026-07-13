@@ -30,12 +30,12 @@ const (
 	goBinary = "../../bin/tunnelvision"
 )
 
-type TunnelvisionProcess struct {
+type TunnelVisionProcess struct {
 	cmd    *exec.Cmd
 	cancel context.CancelFunc
 }
 
-func (p *TunnelvisionProcess) Stop() {
+func (p *TunnelVisionProcess) Stop() {
 	if p.cancel != nil {
 		p.cancel()
 	}
@@ -99,7 +99,7 @@ func waitForUnixSocket(path string, timeout time.Duration) error {
 	return fmt.Errorf("timeout waiting for unix socket %s", path)
 }
 
-func startProcess(name string, binary string, args []string, env []string) (*TunnelvisionProcess, error) {
+func startProcess(name string, binary string, args []string, env []string) (*TunnelVisionProcess, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cmd := exec.CommandContext(ctx, binary, args...)
 	if env != nil {
@@ -117,7 +117,7 @@ func startProcess(name string, binary string, args []string, env []string) (*Tun
 		return nil, err
 	}
 
-	return &TunnelvisionProcess{cmd: cmd, cancel: cancel}, nil
+	return &TunnelVisionProcess{cmd: cmd, cancel: cancel}, nil
 }
 
 func runEchoServer(port int) (chan struct{}, error) {
@@ -479,7 +479,7 @@ func TestInteroperability(t *testing.T) {
 			udpEchoDone, _ := runUDPEchoServer(targetPort)
 			defer func() { _ = udpEchoDone }()
 
-			// Start Tunnelvision Server
+			// Start TunnelVision Server
 			serverAddr := net.JoinHostPort(host, fmt.Sprintf("%d", serverPort))
 			serverURL := ""
 			switch tc.transport {
@@ -534,7 +534,7 @@ func TestInteroperability(t *testing.T) {
 				t.Fatalf("Server failed to start: %v", err)
 			}
 
-			// Start Tunnelvision Client
+			// Start TunnelVision Client
 			var clientArgs []string
 			// Use RFC 2732 brackets for IPv6 in tunnel arguments
 			tcpL := fmt.Sprintf("tcp://%s:127.0.0.1:%d", net.JoinHostPort(host, fmt.Sprintf("%d", tcpPort)), targetPort)
